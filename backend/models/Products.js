@@ -13,6 +13,11 @@ const ProductsShema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: String,
+    enum: ["OutOfStock", "Available"],
+    default: "Available"
+  },
 });
 
 module.exports = mongoose.model("Products", ProductsShema);
