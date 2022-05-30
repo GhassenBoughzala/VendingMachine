@@ -3,7 +3,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 const connectDB = require('./db/db')
 const bodyParser = require('body-parser')
-
+const productRoute = require('./controller/product-service')
 require('dotenv').config()
 connectDB()
 
@@ -16,9 +16,8 @@ app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-//app.use("/api/categorie", catRoute)
+app.use("/api/product", productRoute)
 
-//404
 app.use((req, res) => {
     res.status(404).json({
         success: false,
