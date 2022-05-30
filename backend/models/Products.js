@@ -13,6 +13,10 @@ const ProductsShema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  img: {
+    type: String,
+    default: ""
+  },
   status: {
     type: String,
     enum: ["OutOfStock", "Available"],
