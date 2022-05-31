@@ -89,7 +89,7 @@ router.put("/", validateAddProduct, isRequestValidated, async (req, res) => {
 router.put("/admin/addQnt", isRequestValidated, async (req, res) => {
   try {
     let { id, quantity } = req.body;
-    
+
     //const one = await Products.findById({ id });
     const updated = await Products.findByIdAndUpdate(
       id,
@@ -102,7 +102,7 @@ router.put("/admin/addQnt", isRequestValidated, async (req, res) => {
         { $set: { status: "OutOfStock" } },
         { new: true }
       );
-    }else{
+    } else {
       await Products.findByIdAndUpdate(
         id,
         { $set: { status: "Available" } },
@@ -111,8 +111,7 @@ router.put("/admin/addQnt", isRequestValidated, async (req, res) => {
     }
 
     let data = await Products.find({});
-    res.status(200).json(data)
-
+    res.status(200).json(data);
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -124,31 +123,29 @@ router.put("/admin/addQnt", isRequestValidated, async (req, res) => {
 
 router.put("/took", isRequestValidated, async (req, res) => {
   try {
-    let { id ,quantity } = req.body;
-    
-    //const one = await Products.findById({ id });
-    const updated = await Products.findByIdAndUpdate(
-      id,
-      { $set: { quantity: quantity } },
-      { new: true }
-    );
-    if (quantity === "0") {
+    let { id, quantity } = req.body;
+    const one = await Products.findOne({ id });
+
+    var result = parseInt(one.quantity) - 1;
+    const to = result.toString();
+
+    if (one.quantity === "0") {
       await Products.findByIdAndUpdate(
         id,
         { $set: { status: "OutOfStock" } },
         { new: true }
       );
-    }else{
+      let data = await Products.find({});
+      res.status(200).json(data);
+    } else {
       await Products.findByIdAndUpdate(
         id,
-        { $set: { status: "Available" } },
+        { $set: { status: "Available", quantity: to } },
         { new: true }
       );
+      let data = await Products.find({});
+      res.status(200).json(data);
     }
-
-    let data = await Products.find({});
-    res.status(200).json(data)
-    
   } catch (error) {
     console.log(error);
     res.status(500).json({

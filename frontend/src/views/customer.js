@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Fragment, useEffect, useState } from "react";
+import { connect } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Row,
@@ -13,6 +14,7 @@ import {
   CardFooter,
   Form,
 } from "reactstrap";
+import { updateProduct } from "../redux/products/productsActions";
 
 const InitialValues = {
   currentAmount: 0,
@@ -25,6 +27,7 @@ const backdrop = {
   visible: { opacity: 1 },
   hidden: { opacity: 0 },
 };
+
 const modal = {
   hidden: { y: "100vh", opacity: 0 },
   visible: {
@@ -47,8 +50,8 @@ const Customer = ({ ...props }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    props.update(props.currentObj._id, values);
-    props.setShowModal(false);
+    const result = parseFloat(currentObj.quantity) - 1;
+    props.update(result);
   };
 
   const reset = () => {
@@ -225,7 +228,7 @@ const Customer = ({ ...props }) => {
                 setValues({ ...values, changeAmount: 0 });
               }}
             >
-              Take change: {" "} 
+              Take change:{" "}
               <span className="text-red">
                 {values.changeAmount.toString().substring(0, 4)} €
               </span>
@@ -233,14 +236,17 @@ const Customer = ({ ...props }) => {
           </Row>
           {correct && (
             <Row className="justify-content-center m-2">
-              <Button
-                color="btn btn-outline-success"
-                onClick={() => {
-                  setShowModal(true);
-                }}
-              >
-                Confirm
-              </Button>
+              <Form onSubmit={onSubmit}>
+                <Button
+                  color="btn btn-outline-success"
+                  type="submit"
+                  onClick={() => {
+                    setShowModal(true);
+                  }}
+                >
+                  Confirm
+                </Button>
+              </Form>
             </Row>
           )}
         </CardFooter>
@@ -302,7 +308,7 @@ const Customer = ({ ...props }) => {
                               setValues({ ...values, changeAmount: 0 });
                             }}
                           >
-                            Take change: {" "} 
+                            Take change:{" "}
                             <span className="text-red">
                               {values.changeAmount.toString().substring(0, 4)} €
                             </span>
@@ -321,4 +327,13 @@ const Customer = ({ ...props }) => {
   );
 };
 
-export default Customer;
+const mapStateToProps = (state) => ({
+  List: state.products.products,
+  isLoading: state.products.loading,
+});
+
+const mapActionToProps = {
+  update: updateProduct,
+};
+
+export default connect(mapStateToProps, mapActionToProps)(Customer);
