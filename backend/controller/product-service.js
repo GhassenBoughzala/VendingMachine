@@ -125,7 +125,7 @@ router.put("/took", isRequestValidated, async (req, res) => {
   try {
     let { id, quantity } = req.body;
     const one = await Products.findOne({ id });
-
+    console.log(id);
     var result = parseInt(one.quantity) - 1;
     const to = result.toString();
 

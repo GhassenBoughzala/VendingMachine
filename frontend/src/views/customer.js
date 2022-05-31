@@ -1,3 +1,4 @@
+/* eslint-disable no-sequences */
 /* eslint-disable no-cond-assign */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
@@ -47,6 +48,7 @@ const Customer = ({ ...props }) => {
   const [values, setValues] = useState(InitialValues);
   const [currentObj, setCurrentObj] = useState({});
   const [correct, setCorrect] = useState(false);
+  const [chosen, setChosen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const onSubmit = (e) => {
     e.preventDefault();
@@ -56,6 +58,7 @@ const Customer = ({ ...props }) => {
 
   const reset = () => {
     props.setAvailable(false);
+    props.setcurrentIndex(-1);
     setValues(InitialValues);
     setCurrentObj({});
     setCorrect(false);
@@ -107,13 +110,13 @@ const Customer = ({ ...props }) => {
           display: `REQUIRED PRICE ${currentObj.price} €`,
         });
       }
-    }else{
-        setValues({
-            ...values,
-            display: `SELECT PRODUCT`,
-          });
+    } else {
+      setValues({
+        ...values,
+        display: `SELECT PRODUCT`,
+      });
     }
-  }, [values.currentAmount, props.Available]);
+  }, [ values.currentAmount, chosen, correct, props.Available]);
 
   return (
     <>
@@ -124,7 +127,8 @@ const Customer = ({ ...props }) => {
         <CardBody className="border-white">
           <Row className="justify-content-center">
             <h4 className="text-white">
-              Current amount: {values.currentAmount.toString().substring(0, 4)}€
+              Current amount: {values.currentAmount.toString().substring(0, 4)}{" "}
+              €
             </h4>
 
             <div className="py-3">
@@ -196,18 +200,35 @@ const Customer = ({ ...props }) => {
                   {props.products.map((p, index) => {
                     return (
                       <Fragment key={index}>
-                        <Button
-                          color="btn btn-outline-white"
-                          onClick={() => {
-                            return (
-                              props.setAvailable(true),
-                              props.setcurrentIndex(index),
-                              setCurrentObj(p)
-                            );
-                          }}
-                        >
-                          {index + 1}
-                        </Button>
+                        {values.currentAmount >= parseFloat(p.price) ? (
+                          <Button
+                            color="btn btn-outline-white"
+                            onClick={() => {
+                              return (
+                                props.setAvailable(true),
+                                props.setcurrentIndex(index),
+                                setCurrentObj(p)
+                              );
+                            }}
+                          >
+                            {index + 1}
+                          </Button>
+                        ) : (
+                          <Button
+                            disabled
+                            color="btn btn-outline-danger"
+                            onClick={() => {
+                              return (
+                                props.setAvailable(true),
+                                props.setcurrentIndex(index),
+                                setCurrentObj(p),
+                                setChosen(true)
+                              );
+                            }}
+                          >
+                            {index + 1}
+                          </Button>
+                        )}
                       </Fragment>
                     );
                   })}
@@ -222,7 +243,11 @@ const Customer = ({ ...props }) => {
               color="btn btn-outline-white"
               size="sm"
               onClick={() => {
-                setValues({ ...values, currentAmount: 0 });
+                return (
+                  setValues({ ...values, currentAmount: 0 }),
+                  props.setAvailable(false),
+                  props.setcurrentIndex(-1)
+                );
               }}
             >
               RETURN COINS
@@ -241,7 +266,7 @@ const Customer = ({ ...props }) => {
               </span>
             </Button>
           </Row>
-          {correct && values.changeAmount === 0 && (
+          {correct && (
             <Row className="justify-content-center m-2">
               <Form onSubmit={onSubmit}>
                 <Button
