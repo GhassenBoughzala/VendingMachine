@@ -124,28 +124,41 @@ router.put("/admin/addQnt", isRequestValidated, async (req, res) => {
 router.put("/took", isRequestValidated, async (req, res) => {
   try {
     let { id, quantity } = req.body;
-    const one = await Products.findOne({ id });
-    console.log(id);
-    var result = parseInt(one.quantity) - 1;
+    const one = await Products.findById(id);
+    var oldQ = parseInt(one.quantity);
+    var newQ = parseInt(1);
+    var result = oldQ - newQ;
     const to = result.toString();
-
     if (one.quantity === "0") {
-      await Products.findByIdAndUpdate(
+      const out = await Products.findByIdAndUpdate(
         id,
         { $set: { status: "OutOfStock" } },
         { new: true }
       );
-      let data = await Products.find({});
-      res.status(200).json(data);
+      res.status(404).json({
+        error: true,
+        msg: "Product out of stock",
+      });
     } else {
-      await Products.findByIdAndUpdate(
+      const updated = await Products.findByIdAndUpdate(
         id,
-        { $set: { status: "Available", quantity: to } },
+        { $set: { quantity: to } },
         { new: true }
       );
-      let data = await Products.find({});
-      res.status(200).json(data);
+      if (updated.quantity === "0"){
+        const outOfStock = await Products.findByIdAndUpdate(
+          id,
+          { $set: { quantity: to, status: "OutOfStock" } },
+          { new: true }
+        );
+        res.status(200).json(outOfStock);
+      }else{
+        res.status(200).json(updated);
+      }
+     
     }
+
+    //res.status(200).json({oldQ, newQ, result});
   } catch (error) {
     console.log(error);
     res.status(500).json({

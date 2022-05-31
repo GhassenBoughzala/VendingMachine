@@ -95,6 +95,7 @@ const Customer = ({ ...props }) => {
   }
 
   useEffect(() => {
+
     if (props.Available) {
       if (values.currentAmount >= parseFloat(currentObj.price)) {
         setValues({
@@ -113,10 +114,10 @@ const Customer = ({ ...props }) => {
     } else {
       setValues({
         ...values,
-        display: `SELECT PRODUCT`,
+        display: `Deposit Coins`,
       });
     }
-  }, [ values.currentAmount, chosen, correct, props.Available]);
+  }, [values.currentAmount, chosen, correct, props.Available]);
 
   return (
     <>

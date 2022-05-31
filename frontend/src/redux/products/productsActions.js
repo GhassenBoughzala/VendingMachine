@@ -28,7 +28,7 @@ export const updateProduct = (id) => (dispatch) => {
           type: GET_PRODUCTS_S,
           payload: res.data,
         });
-        console.log(res.data);
+        
       })
       .catch((err) => console.log(err), GET_PRODUCTS_F);
   };
