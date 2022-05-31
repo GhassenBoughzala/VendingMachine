@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import axios from "axios";
 import { toast } from "react-toastify";
 import { GET_PRODUCTS_F, GET_PRODUCTS_S, LOADING_PRODUCTS } from "./productsTypes";

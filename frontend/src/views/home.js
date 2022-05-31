@@ -11,22 +11,44 @@ import {
 } from "reactstrap";
 import "../components/card.css";
 import "../components/Loading/loading.css";
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { allProducts } from "../redux/products/productsActions";
+import Customer from "./customer";
+
+const getRandomDelay = () => -(Math.random() * 0.7 + 0.05);
+const randomDuration = () => Math.random() * 0.07 + 0.23;
+const variants = {
+  start: (i) => ({
+    rotate: i % 2 === 0 ? [-1, 1.3, 0] : [1, -1.4, 0],
+    transition: {
+      delay: getRandomDelay(),
+      repeat: Infinity,
+      duration: randomDuration(),
+    },
+  }),
+  reset: {
+    rotate: 0,
+  },
+};
 
 const Home = ({ ...props }) => {
+  const controls = useAnimation();
+
   useEffect(() => {
     props.All();
   }, []);
+
   const products = props.List;
+  const [Available, setAvailable] = useState(false);
+  const [currentIndex, setcurrentIndex] = useState(-1);
 
   return (
     <div className="main-content w-100vh h-100vh py-6 bg-gradient-red">
       <Container>
         <Row>
-          <Col className="order-xl-1 mb-5 mb-xl-0" xl="8">
+          <Col className="order-xl-1 mb-5 mb-xl-0" xl="7">
             <Card className="border-dark bg-gradient-dark productcard">
               <Row className="justify-content-center py-2 px-2 ">
                 <Col>
@@ -40,7 +62,7 @@ const Home = ({ ...props }) => {
                 </Col>
               </Row>
               <CardHeader className="text-center bg-gradient-dark">
-              <h1 className=" text-white ">Vending Machine</h1>
+                <h1 className=" text-white ">Vending Machine</h1>
               </CardHeader>
               {props.isLoading ? (
                 <div className="text-center justify-content-center my-5">
@@ -57,26 +79,59 @@ const Home = ({ ...props }) => {
                             animate={{ opacity: 1 }}
                             transition={{ duration: 1.5 }}
                           >
-                            <Card className="m-2 productcard">
-                              <CardBody>
-                                <div className="text-center">
-                                  <h1 className="text-white">{p.title}</h1>
-                                  <img
-                                    className="img-fluid rounded avatar avatar-lg h-50 w-100"
-                                    src={p.img}
-                                    alt=""
-                                  />
-                                  <h3 className="text-white ">
-                                    {p.quantity} Item Left
-                                  </h3>
-                                  <div className="border-1">
+                            {currentIndex === index && Available ? (
+                              <motion.div
+                                animate={{
+                                  scale: 1.06,
+                                }}
+                              >
+                                <Card className="m-2 productcard extraborder">
+                                  <CardBody>
+                                    <div className="text-center">
+                                      <h1 className="text-white">{p.title}</h1>
+                                      <img
+                                        className="img-fluid rounded avatar avatar-lg h-50 w-100"
+                                        src={p.img}
+                                        alt=""
+                                      />
+                                      <h3 className="text-white ">
+                                        {p.quantity} Item Left
+                                      </h3>
+
+                                      <h3 className="text-danger ">
+                                        {p.price} €
+                                      </h3>
+                                      <h3 className="text-white ">
+                                        - {index + 1} -
+                                      </h3>
+                                    </div>
+                                  </CardBody>
+                                </Card>
+                              </motion.div>
+                            ) : (
+                              <Card className="m-2 productcard">
+                                <CardBody>
+                                  <div className="text-center">
+                                    <h1 className="text-white">{p.title}</h1>
+                                    <img
+                                      className="img-fluid rounded avatar avatar-lg h-50 w-100"
+                                      src={p.img}
+                                      alt=""
+                                    />
+                                    <h3 className="text-white ">
+                                      {p.quantity} Item Left
+                                    </h3>
+
                                     <h3 className="text-danger ">
                                       {p.price} €
                                     </h3>
+                                    <h3 className="text-white ">
+                                      - {index + 1} -
+                                    </h3>
                                   </div>
-                                </div>
-                              </CardBody>
-                            </Card>
+                                </CardBody>
+                              </Card>
+                            )}
                           </motion.div>
                         </Fragment>
                       );
@@ -86,8 +141,16 @@ const Home = ({ ...props }) => {
               )}
             </Card>
           </Col>
-          <Col className="order-xl-1 mb-5 mb-xl-0" xl="4">
-            <h1 className=" text-red ">HELLO</h1>
+          <Col className="order-xl-1 mb-5 mb-xl-0 " xl="4">
+            <Customer
+              {...{
+                Available,
+                setAvailable,
+                products,
+                currentIndex,
+                setcurrentIndex,
+              }}
+            />
           </Col>
         </Row>
       </Container>
