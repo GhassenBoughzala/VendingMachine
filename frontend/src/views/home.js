@@ -11,28 +11,13 @@ import {
   CardFooter,
 } from "reactstrap";
 import "../components/card.css";
+import "../components/modal.css";
 import "../components/Loading/loading.css";
 import React, { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { motion, useAnimation } from "framer-motion";
 import { allProducts } from "../redux/products/productsActions";
 import Customer from "./customer";
-
-const getRandomDelay = () => -(Math.random() * 0.7 + 0.05);
-const randomDuration = () => Math.random() * 0.07 + 0.23;
-const variants = {
-  start: (i) => ({
-    rotate: i % 2 === 0 ? [-1, 1.3, 0] : [1, -1.4, 0],
-    transition: {
-      delay: getRandomDelay(),
-      repeat: Infinity,
-      duration: randomDuration(),
-    },
-  }),
-  reset: {
-    rotate: 0,
-  },
-};
 
 const Home = ({ ...props }) => {
   const controls = useAnimation();
