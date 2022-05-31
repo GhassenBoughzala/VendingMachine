@@ -1,7 +1,8 @@
+/* eslint-disable no-cond-assign */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Fragment, useEffect, useState } from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Row,
@@ -42,16 +43,15 @@ const Customer = ({ ...props }) => {
     height: 50,
     width: 120,
   };
-
+  const dispatch = useDispatch();
   const [values, setValues] = useState(InitialValues);
   const [currentObj, setCurrentObj] = useState({});
   const [correct, setCorrect] = useState(false);
   const [showModal, setShowModal] = useState(false);
-
   const onSubmit = (e) => {
     e.preventDefault();
-    const result = parseFloat(currentObj.quantity) - 1;
-    props.update(result);
+    dispatch(updateProduct(currentObj._id));
+    //props.update(currentObj._id);
   };
 
   const reset = () => {
@@ -97,23 +97,28 @@ const Customer = ({ ...props }) => {
         setValues({
           ...values,
           changeAmount: values.currentAmount - parseFloat(currentObj.price),
-          display: `CHECK YOUR CHANGE`,
+          display: `CONFIRM YOUR SELECTION`,
         });
         setCorrect(true);
       } else {
         setValues({
           ...values,
           required: parseFloat(currentObj.price),
-          display: `PRICE ${currentObj.price} €`,
+          display: `REQUIRED PRICE ${currentObj.price} €`,
         });
       }
+    }else{
+        setValues({
+            ...values,
+            display: `SELECT PRODUCT`,
+          });
     }
-  }, [values.changeAmount, values.currentAmount, props.Available, currentObj]);
+  }, [values.currentAmount, props.Available]);
 
   return (
     <>
       <Card className="border-dark bg-gradient-dark productcard">
-        <CardHeader className="text-center bg-gradient-dark ">
+        <CardHeader className="text-center bg-gradient-dark border-0">
           <h2 className="text-red">{values.display}</h2>
         </CardHeader>
         <CardBody className="border-white">
@@ -184,30 +189,31 @@ const Customer = ({ ...props }) => {
                 </Button>
               </div>
             </div>
-
-            <div className="text-center">
-              <h4 className="text-white">Select Number</h4>
-              <div className="d-flex align-items-start">
-                {props.products.map((p, index) => {
-                  return (
-                    <Fragment key={index}>
-                      <Button
-                        color="btn btn-outline-white"
-                        onClick={() => {
-                          return (
-                            props.setAvailable(true),
-                            props.setcurrentIndex(index),
-                            setCurrentObj(p)
-                          );
-                        }}
-                      >
-                        {index + 1}
-                      </Button>
-                    </Fragment>
-                  );
-                })}
+            {values.currentAmount !== 0 && (
+              <div className="text-center">
+                <h4 className="text-white">Select Number</h4>
+                <div className="d-flex align-items-start">
+                  {props.products.map((p, index) => {
+                    return (
+                      <Fragment key={index}>
+                        <Button
+                          color="btn btn-outline-white"
+                          onClick={() => {
+                            return (
+                              props.setAvailable(true),
+                              props.setcurrentIndex(index),
+                              setCurrentObj(p)
+                            );
+                          }}
+                        >
+                          {index + 1}
+                        </Button>
+                      </Fragment>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
           </Row>
         </CardBody>
         <CardFooter className="text-center bg-gradient-dark border-0">
@@ -224,6 +230,7 @@ const Customer = ({ ...props }) => {
             <Button
               color="btn btn-outline-white"
               size="sm"
+              type="submit"
               onClick={() => {
                 setValues({ ...values, changeAmount: 0 });
               }}
@@ -234,7 +241,7 @@ const Customer = ({ ...props }) => {
               </span>
             </Button>
           </Row>
-          {correct && (
+          {correct && values.changeAmount === 0 && (
             <Row className="justify-content-center m-2">
               <Form onSubmit={onSubmit}>
                 <Button
@@ -253,6 +260,8 @@ const Customer = ({ ...props }) => {
         <Button
           color="btn-grey border-top"
           size="sm"
+          type="reset"
+          value="Reset"
           onClick={() => {
             reset();
           }}
@@ -282,7 +291,10 @@ const Customer = ({ ...props }) => {
                       <Button
                         className="border-0 shadow-none bg-transparent"
                         size="sm"
-                        onClick={() => setShowModal(false)}
+                        type="Reset"
+                        onClick={() => {
+                          return setShowModal(false), reset();
+                        }}
                       >
                         <i className="fas fa-times fa-2x text-danger"></i>
                       </Button>
@@ -301,19 +313,6 @@ const Customer = ({ ...props }) => {
                           src={currentObj.img}
                           alt=""
                         />
-                        {values.changeAmount !== 0 && (
-                          <Button
-                            color="btn btn-outline-white"
-                            onClick={() => {
-                              setValues({ ...values, changeAmount: 0 });
-                            }}
-                          >
-                            Take change:{" "}
-                            <span className="text-red">
-                              {values.changeAmount.toString().substring(0, 4)} €
-                            </span>
-                          </Button>
-                        )}
                       </div>
                     </Form>
                   </CardBody>
@@ -327,13 +326,4 @@ const Customer = ({ ...props }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  List: state.products.products,
-  isLoading: state.products.loading,
-});
-
-const mapActionToProps = {
-  update: updateProduct,
-};
-
-export default connect(mapStateToProps, mapActionToProps)(Customer);
+export default Customer;

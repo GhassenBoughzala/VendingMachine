@@ -94,29 +94,45 @@ const Home = ({ ...props }) => {
                               </motion.div>
                             ) : (
                               <Card className="m-2 productcard">
-                                <CardBody>
-                                  <div className="text-center">
-                                    <h1 className="text-white">{p.title}</h1>
-                                    <img
-                                      className="img-fluid rounded avatar avatar-lg h-50 w-100"
-                                      src={p.img}
-                                      alt=""
-                                    />
-                                    <h3 className="text-white ">
-                                      {p.quantity} Item Left
-                                    </h3>
+                                {p.status !== "OutOfStock" ? (
+                                  <CardBody>
+                                    <div className="text-center">
+                                      <h1 className="text-white">{p.title}</h1>
+                                      <img
+                                        className="img-fluid rounded avatar avatar-lg h-50 w-100"
+                                        src={p.img}
+                                        alt=""
+                                      />
+                                      <h3 className="text-white ">
+                                        {p.quantity} Item Left
+                                      </h3>
 
-                                    <h3 className="text-danger ">
-                                      {p.price} €
-                                    </h3>
-                                   
-                                  </div>
-                                </CardBody>
+                                      <h3 className="text-danger ">
+                                        {p.price} €
+                                      </h3>
+                                    </div>
+                                  </CardBody>
+                                ) : (
+                                  <CardBody>
+                                    <div className="text-center">
+                                      <h1 className="text-white">{p.title}</h1>
+                                      <img
+                                        className="img-fluid rounded avatar avatar-lg h-50 w-100"
+                                        src={p.img}
+                                        alt=""
+                                      />
+                                      <h3 className="text-white ">
+                                        OUT OF STOCK
+                                      </h3>
+                                    </div>
+                                  </CardBody>
+                                )}
+
                                 <CardFooter className="bg-card text-center border-0">
-                                    <h3 className="text-white ">
-                                      - {index + 1} -
-                                    </h3>
-                                  </CardFooter>
+                                  <h3 className="text-white ">
+                                    - {index + 1} -
+                                  </h3>
+                                </CardFooter>
                               </Card>
                             )}
                           </motion.div>
