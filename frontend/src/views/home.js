@@ -8,6 +8,7 @@ import {
   CardBody,
   CardHeader,
   Button,
+  CardFooter,
 } from "reactstrap";
 import "../components/card.css";
 import "../components/Loading/loading.css";
@@ -80,11 +81,7 @@ const Home = ({ ...props }) => {
                             transition={{ duration: 1.5 }}
                           >
                             {currentIndex === index && Available ? (
-                              <motion.div
-                                animate={{
-                                  scale: 1.06,
-                                }}
-                              >
+                              <motion.div animate={{ scale: 1.06 }}>
                                 <Card className="m-2 productcard extraborder">
                                   <CardBody>
                                     <div className="text-center">
@@ -101,11 +98,13 @@ const Home = ({ ...props }) => {
                                       <h3 className="text-danger ">
                                         {p.price} €
                                       </h3>
-                                      <h3 className="text-white ">
-                                        - {index + 1} -
-                                      </h3>
                                     </div>
                                   </CardBody>
+                                  <CardFooter className="bg-card text-center border-0">
+                                    <h3 className="text-white ">
+                                      - {index + 1} -
+                                    </h3>
+                                  </CardFooter>
                                 </Card>
                               </motion.div>
                             ) : (
@@ -125,11 +124,14 @@ const Home = ({ ...props }) => {
                                     <h3 className="text-danger ">
                                       {p.price} €
                                     </h3>
+                                   
+                                  </div>
+                                </CardBody>
+                                <CardFooter className="bg-card text-center border-0">
                                     <h3 className="text-white ">
                                       - {index + 1} -
                                     </h3>
-                                  </div>
-                                </CardBody>
+                                  </CardFooter>
                               </Card>
                             )}
                           </motion.div>

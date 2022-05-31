@@ -10,3 +10,7 @@
 .extraborder {
   border: 2px solid red;
 }
+
+.bg-card {
+  background: #aaaaaa;
+}
