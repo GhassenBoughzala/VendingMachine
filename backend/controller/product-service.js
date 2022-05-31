@@ -124,7 +124,7 @@ router.put("/admin/addQnt", isRequestValidated, async (req, res) => {
 
 router.put("/took", isRequestValidated, async (req, res) => {
   try {
-    let { id, title ,quantity } = req.body;
+    let { id ,quantity } = req.body;
     
     //const one = await Products.findById({ id });
     const updated = await Products.findByIdAndUpdate(

@@ -94,7 +94,7 @@ const Customer = ({ ...props }) => {
         setValues({
           ...values,
           changeAmount: values.currentAmount - parseFloat(currentObj.price),
-          display: `CHECK YOUR `,
+          display: `CHECK YOUR CHANGE`,
         });
         setCorrect(true);
       } else {
@@ -225,7 +225,7 @@ const Customer = ({ ...props }) => {
                 setValues({ ...values, changeAmount: 0 });
               }}
             >
-              Take change{" "}
+              Take change: {" "} 
               <span className="text-red">
                 {values.changeAmount.toString().substring(0, 4)} €
               </span>
@@ -295,7 +295,19 @@ const Customer = ({ ...props }) => {
                           src={currentObj.img}
                           alt=""
                         />
-                    
+                        {values.changeAmount !== 0 && (
+                          <Button
+                            color="btn btn-outline-white"
+                            onClick={() => {
+                              setValues({ ...values, changeAmount: 0 });
+                            }}
+                          >
+                            Take change: {" "} 
+                            <span className="text-red">
+                              {values.changeAmount.toString().substring(0, 4)} €
+                            </span>
+                          </Button>
+                        )}
                       </div>
                     </Form>
                   </CardBody>
