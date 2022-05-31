@@ -86,4 +86,76 @@ router.put("/", validateAddProduct, isRequestValidated, async (req, res) => {
   }
 });
 
+router.put("/admin/addQnt", isRequestValidated, async (req, res) => {
+  try {
+    let { id, quantity } = req.body;
+    
+    //const one = await Products.findById({ id });
+    const updated = await Products.findByIdAndUpdate(
+      id,
+      { $set: { quantity: quantity } },
+      { new: true }
+    );
+    if (quantity === "0") {
+      await Products.findByIdAndUpdate(
+        id,
+        { $set: { status: "OutOfStock" } },
+        { new: true }
+      );
+    }else{
+      await Products.findByIdAndUpdate(
+        id,
+        { $set: { status: "Available" } },
+        { new: true }
+      );
+    }
+
+    let data = await Products.find({});
+    res.status(200).json(data)
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: true,
+      msg: "Server error",
+    });
+  }
+});
+
+router.put("/took", isRequestValidated, async (req, res) => {
+  try {
+    let { id, title ,quantity } = req.body;
+    
+    //const one = await Products.findById({ id });
+    const updated = await Products.findByIdAndUpdate(
+      id,
+      { $set: { quantity: quantity } },
+      { new: true }
+    );
+    if (quantity === "0") {
+      await Products.findByIdAndUpdate(
+        id,
+        { $set: { status: "OutOfStock" } },
+        { new: true }
+      );
+    }else{
+      await Products.findByIdAndUpdate(
+        id,
+        { $set: { status: "Available" } },
+        { new: true }
+      );
+    }
+
+    let data = await Products.find({});
+    res.status(200).json(data)
+    
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: true,
+      msg: "Server error",
+    });
+  }
+});
+
 module.exports = router;
