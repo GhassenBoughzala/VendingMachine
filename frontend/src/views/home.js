@@ -9,6 +9,7 @@ import {
   CardHeader,
   Button,
   CardFooter,
+  Input,
 } from "reactstrap";
 import "../components/card.css";
 import "../components/modal.css";
@@ -18,26 +19,27 @@ import { connect } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { allProducts } from "../redux/products/productsActions";
 import Customer from "./customer";
+import Admin from "./admin";
 
 const backdrop = {
-    visible: { opacity: 1 },
-    hidden: { opacity: 0 },
-  };
-  
-  const modal = {
-    hidden: { y: "100vh", opacity: 0 },
-    visible: {
-      y: "0px",
-      opacity: 1,
-      transition: { delay: 0.5 },
-    },
-  };
+  visible: { opacity: 1 },
+  hidden: { opacity: 0 },
+};
+
+const modal = {
+  hidden: { y: "100vh", opacity: 0 },
+  visible: {
+    y: "0px",
+    opacity: 1,
+    transition: { delay: 0.5 },
+  },
+};
 
 const Home = ({ ...props }) => {
-    const card = {
-        height: 380,
-        width: 190,
-      };
+  const card = {
+    height: 380,
+    width: 190,
+  };
 
   useEffect(() => {
     props.All();
@@ -47,6 +49,7 @@ const Home = ({ ...props }) => {
   const [Available, setAvailable] = useState(false);
   const [showAdmin, setshowAdmin] = useState(false);
   const [currentIndex, setcurrentIndex] = useState(-1);
+  const [currentObj, setCurrentObj] = useState({});
 
   return (
     <div className="main-content w-100vh h-100vh py-6 bg-gradient-red">
@@ -58,7 +61,7 @@ const Home = ({ ...props }) => {
                 <Col>
                   <Button
                     color="btn btn-outline-white"
-                    //onClick={() => setCurrentId(user._id)}
+                    onClick={() => setshowAdmin(true)}
                     size="sm"
                   >
                     <i className="fas fa-tools"></i>
@@ -67,6 +70,7 @@ const Home = ({ ...props }) => {
               </Row>
               <CardHeader className="text-center bg-gradient-dark">
                 <h1 className=" text-white ">Vending Machine</h1>
+                <h4 className=" text-white ">currency EUR</h4>
               </CardHeader>
               {props.isLoading ? (
                 <div className="text-center justify-content-center my-5">
@@ -85,7 +89,10 @@ const Home = ({ ...props }) => {
                           >
                             {currentIndex === index && Available ? (
                               <motion.div animate={{ scale: 1.06 }}>
-                                <Card className="m-2 productcard extraborder" style={card}>
+                                <Card
+                                  className="m-2 productcard extraborder"
+                                  style={card}
+                                >
                                   <CardBody>
                                     <div className="text-center">
                                       <h1 className="text-white">{p.title}</h1>
@@ -139,9 +146,7 @@ const Home = ({ ...props }) => {
                                         src={p.img}
                                         alt=""
                                       />
-                                      <h3 className="text-red">
-                                        OUT OF STOCK
-                                      </h3>
+                                      <h3 className="text-red">OUT OF STOCK</h3>
                                     </div>
                                   </CardBody>
                                 )}
@@ -191,7 +196,15 @@ const Home = ({ ...props }) => {
           >
             <Col className=" fixed-top center" xl="5">
               <motion.div variants={modal}>
-               
+                <Admin
+                  {...{
+                    currentObj,
+                    setCurrentObj,
+                    showAdmin,
+                    setshowAdmin,
+                    products
+                  }}
+                />
               </motion.div>
             </Col>
           </motion.div>
