@@ -53,7 +53,7 @@ const Home = ({ ...props }) => {
 
   return (
     <div className="main-content w-100vh h-100vh py-6 bg-gradient-red">
-      <Container>
+      <Container >
         <Row>
           <Col className="order-xl-1 mb-5 mb-xl-0" xl="7">
             <Card className="border-dark bg-gradient-dark productcard">
@@ -79,7 +79,7 @@ const Home = ({ ...props }) => {
               ) : (
                 <CardBody>
                   <Row xs={1} md={3} className="g-4">
-                    {products.map((p, index) => {
+                    {products.slice(0,3).map((p, index) => {
                       return (
                         <Fragment key={index}>
                           <motion.div

@@ -67,7 +67,7 @@ const Admin = ({ ...props }) => {
   }
 
   return (
-    <Card className="productcard">
+    <Card className="bg-white">
       <Row>
         <Col className="order-xl-1 mb-5 mb-xl-0">
           <Button
@@ -82,12 +82,13 @@ const Admin = ({ ...props }) => {
           </Button>
         </Col>
       </Row>
-      <CardHeader className="text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4 bg-card">
+      <CardHeader className="text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4 bg-white">
         <div className="d-flex justify-content-between"></div>
         <h1 className="mb-0 text-danger">Admin space</h1>
         <div className="m-2">
           <Button
-            color="btn btn-outline-white"
+            color="btn btn-outline-dark"
+            size="sm"
             onClick={() => setshowAdd(true)}
           >
             Add Product
@@ -161,8 +162,8 @@ const Admin = ({ ...props }) => {
       )}
       {showList && (
         <CardBody>
-          <Table className="align-items-center table-white" responsive>
-            <thead className="thead-light">
+          <Table className="align-items-center border-dark table-colors " striped responsive>
+            <thead className="border-dark">
               <tr>
                 <th scope="col">Title</th>
                 <th scope="col">Qnt</th>
@@ -170,7 +171,7 @@ const Admin = ({ ...props }) => {
                 <th scope="col">Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="border-dark">
               {props.products.map((p, index) => {
                 return (
                   <Fragment key={index}>

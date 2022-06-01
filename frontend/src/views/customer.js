@@ -125,7 +125,7 @@ const Customer = ({ ...props }) => {
 
   return (
     <>
-      <Card className="border-dark bg-gradient-dark productcard">
+      <Card className="border-dark bg-gradient-dark productcard h-100">
         <CardHeader className="text-center bg-gradient-dark border-0">
           <h2 className="text-red">{values.display}</h2>
         </CardHeader>
