@@ -50,15 +50,15 @@ const Admin = ({ ...props }) => {
   const [showAdd, setshowAdd] = useState(false);
   const [showList, setshowList] = useState(false);
   const [access, setAccess] = useState(false);
-  const [token, setToken] = useState({ code: "", access:"OFF" });
+  const [token, setToken] = useState({ code: "", access: "OFF" });
 
   const handleToken = (name) => (event) => {
     setToken({ ...token, [name]: event.target.value });
-    if(event.target.value === "1998"){
+    if (event.target.value === "1998") {
       setAccess(true);
-      setToken({...token ,access: "ON"})
-    }else{
-      setAccess(false)
+      setToken({ ...token, access: "ON" });
+    } else {
+      setAccess(false);
     }
   };
 
@@ -110,7 +110,11 @@ const Admin = ({ ...props }) => {
               name="code"
               onChange={handleToken("code")}
             />
-           {token.access === "OFF" ?  <h5 className="mb-0 text-danger">Access OFF</h5> : <h5 className="mb-0 text-success">Access ON</h5> }
+            {token.access === "OFF" ? (
+              <h5 className="mb-0 text-danger">Access OFF</h5>
+            ) : (
+              <h5 className="mb-0 text-success">Access ON</h5>
+            )}
           </div>
         </CardHeader>
       )}
@@ -221,7 +225,7 @@ const Admin = ({ ...props }) => {
                         <tr key={p._id}>
                           <td>{p.title}</td>
                           <td>{p.quantity}</td>
-                          <td>{p.price}</td>
+                          <td>{p.price} €</td>
                           <td>
                             <>
                               <Button
