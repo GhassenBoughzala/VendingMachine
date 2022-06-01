@@ -2,9 +2,6 @@
 /* eslint-disable no-cond-assign */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Fragment, useEffect, useState } from "react";
-import { connect, useDispatch } from "react-redux";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   Row,
   Col,
@@ -16,6 +13,9 @@ import {
   CardFooter,
   Form,
 } from "reactstrap";
+import { Fragment, useEffect, useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import { motion, AnimatePresence } from "framer-motion";
 import { updateProduct } from "../redux/products/productsActions";
 
 const InitialValues = {
@@ -33,7 +33,7 @@ const backdrop = {
 const modal = {
   hidden: { y: "100vh", opacity: 0 },
   visible: {
-    y: "100px",
+    y: "0px",
     opacity: 1,
     transition: { delay: 0.5 },
   },
@@ -43,6 +43,11 @@ const Customer = ({ ...props }) => {
   const btn = {
     height: 50,
     width: 120,
+  };
+
+  const img = {
+    height: 250,
+    width: 250,
   };
   const dispatch = useDispatch();
   const [values, setValues] = useState(InitialValues);
@@ -95,7 +100,6 @@ const Customer = ({ ...props }) => {
   }
 
   useEffect(() => {
-
     if (props.Available) {
       if (values.currentAmount >= parseFloat(currentObj.price)) {
         setValues({
@@ -201,7 +205,22 @@ const Customer = ({ ...props }) => {
                   {props.products.map((p, index) => {
                     return (
                       <Fragment key={index}>
-                        {values.currentAmount >= parseFloat(p.price) ? (
+                        {p.quantity === "0" ? (
+                          <Button
+                            disabled
+                            color="btn btn-outline-danger"
+                            onClick={() => {
+                              return (
+                                props.setAvailable(true),
+                                props.setcurrentIndex(index),
+                                setCurrentObj(p),
+                                setChosen(true)
+                              );
+                            }}
+                          >
+                            {index + 1}
+                          </Button>
+                        ) : values.currentAmount >= parseFloat(p.price) ? (
                           <Button
                             color="btn btn-outline-white"
                             onClick={() => {
@@ -247,7 +266,8 @@ const Customer = ({ ...props }) => {
                 return (
                   setValues({ ...values, currentAmount: 0 }),
                   props.setAvailable(false),
-                  props.setcurrentIndex(-1)
+                  props.setcurrentIndex(-1),
+                  setCorrect(false)
                 );
               }}
             >
@@ -271,7 +291,7 @@ const Customer = ({ ...props }) => {
             <Row className="justify-content-center m-2">
               <Form onSubmit={onSubmit}>
                 <Button
-                  color="btn btn-outline-success"
+                  color="btn btn-success"
                   type="submit"
                   onClick={() => {
                     setShowModal(true);
@@ -329,16 +349,37 @@ const Customer = ({ ...props }) => {
                   <CardHeader className="text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4 bg-card">
                     <div className="d-flex justify-content-between"></div>
                     <h1 className="mb-0 text-danger">thank you </h1>
+                    {values.changeAmount > 0 && (
+                      <h1 className="mb-0 text-white">
+                        Don't forget to take your change
+                      </h1>
+                    )}
                   </CardHeader>
 
                   <CardBody>
                     <Form role="form" onSubmit={onSubmit}>
                       <div className="text-center">
                         <img
-                          className="img-fluid rounded avatar avatar-lg h-50 w-100"
+                          className="img-fluid rounded avatar avatar-lg"
+                          style={img}
                           src={currentObj.img}
                           alt=""
                         />
+                        {values.changeAmount > 0 && (
+                          <Button
+                            color="btn btn-outline-white"
+                            size="sm"
+                            type="submit"
+                            onClick={() => {
+                              setValues({ ...values, changeAmount: 0 });
+                            }}
+                          >
+                            Take change:{" "}
+                            <span className="text-red">
+                              {values.changeAmount.toString().substring(0, 4)} €
+                            </span>
+                          </Button>
+                        )}
                       </div>
                     </Form>
                   </CardBody>

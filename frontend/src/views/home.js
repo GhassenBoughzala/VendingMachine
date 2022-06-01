@@ -15,12 +15,29 @@ import "../components/modal.css";
 import "../components/Loading/loading.css";
 import React, { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { motion, useAnimation } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { allProducts } from "../redux/products/productsActions";
 import Customer from "./customer";
 
+const backdrop = {
+    visible: { opacity: 1 },
+    hidden: { opacity: 0 },
+  };
+  
+  const modal = {
+    hidden: { y: "100vh", opacity: 0 },
+    visible: {
+      y: "0px",
+      opacity: 1,
+      transition: { delay: 0.5 },
+    },
+  };
+
 const Home = ({ ...props }) => {
-  const controls = useAnimation();
+    const card = {
+        height: 380,
+        width: 190,
+      };
 
   useEffect(() => {
     props.All();
@@ -28,6 +45,7 @@ const Home = ({ ...props }) => {
 
   const products = props.List;
   const [Available, setAvailable] = useState(false);
+  const [showAdmin, setshowAdmin] = useState(false);
   const [currentIndex, setcurrentIndex] = useState(-1);
 
   return (
@@ -67,7 +85,7 @@ const Home = ({ ...props }) => {
                           >
                             {currentIndex === index && Available ? (
                               <motion.div animate={{ scale: 1.06 }}>
-                                <Card className="m-2 productcard extraborder">
+                                <Card className="m-2 productcard extraborder" style={card}>
                                   <CardBody>
                                     <div className="text-center">
                                       <h1 className="text-white">{p.title}</h1>
@@ -77,7 +95,7 @@ const Home = ({ ...props }) => {
                                         alt=""
                                       />
                                       <h3 className="text-white ">
-                                        {p.quantity} Item Left
+                                        {p.quantity} Items Left
                                       </h3>
 
                                       <h3 className="text-danger ">
@@ -93,7 +111,7 @@ const Home = ({ ...props }) => {
                                 </Card>
                               </motion.div>
                             ) : (
-                              <Card className="m-2 productcard">
+                              <Card className="m-2 productcard" style={card}>
                                 {p.status !== "OutOfStock" ? (
                                   <CardBody>
                                     <div className="text-center">
@@ -104,7 +122,7 @@ const Home = ({ ...props }) => {
                                         alt=""
                                       />
                                       <h3 className="text-white ">
-                                        {p.quantity} Item Left
+                                        {p.quantity} Items Left
                                       </h3>
 
                                       <h3 className="text-danger ">
@@ -121,7 +139,7 @@ const Home = ({ ...props }) => {
                                         src={p.img}
                                         alt=""
                                       />
-                                      <h3 className="text-white ">
+                                      <h3 className="text-red">
                                         OUT OF STOCK
                                       </h3>
                                     </div>
@@ -157,6 +175,28 @@ const Home = ({ ...props }) => {
           </Col>
         </Row>
       </Container>
+
+      <AnimatePresence
+        exitBeforeEnter
+        showModal={showAdmin}
+        setShowModal={setshowAdmin}
+      >
+        {showAdmin && (
+          <motion.div
+            className="backdrop"
+            variants={backdrop}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+          >
+            <Col className=" fixed-top center" xl="5">
+              <motion.div variants={modal}>
+               
+              </motion.div>
+            </Col>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
