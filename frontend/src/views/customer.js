@@ -202,7 +202,7 @@ const Customer = ({ ...props }) => {
               <div className="text-center">
                 <h4 className="text-white">Select Number</h4>
                 <div className="d-flex align-items-start">
-                  {props.products.map((p, index) => {
+                  {props.products.slice(0,3).map((p, index) => {
                     return (
                       <Fragment key={index}>
                         {p.quantity === "0" ? (
