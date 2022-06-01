@@ -368,7 +368,7 @@ const Customer = ({ ...props }) => {
                         {values.changeAmount > 0 && (
                           <Button
                             color="btn btn-outline-white"
-                            size="sm"
+                            
                             type="submit"
                             onClick={() => {
                               setValues({ ...values, changeAmount: 0 });
